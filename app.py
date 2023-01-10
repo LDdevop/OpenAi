@@ -9,7 +9,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 dotenv.load_dotenv()
 
 
-@app.route("/get_answer/<question>", methods=['POST'])
+@app.route('/get_answer/<question>', methods=['POST'])
 def get_answer(question):
     if request.method == 'POST':
         response = openai.Completion.create(
@@ -22,7 +22,13 @@ def get_answer(question):
             presence_penalty=0.0
         )
         return {"success": True,
-                "message": response.choices[0].text}
+                "message": response.choices[0].text.strip()}
+
+
+@app.errorhandler(405)
+def page_not_found(e):
+    return {"success": False,
+            "message": str(e)}
 
 
 def generate_prompt(question):
@@ -32,4 +38,5 @@ def generate_prompt(question):
             question: Are you good in generation?
             answer: Yes, I'm
             question: {question.capitalize()}
-            answer:"""
+            answer:
+            """
