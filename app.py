@@ -10,7 +10,8 @@ dotenv.load_dotenv()
 
 
 @app.route('/get_answer/<question>', methods=['POST'])
-def get_answer(question):
+def get_answer_from_openai(question):
+    """Make request to Open Ai and return response"""
     if request.method == 'POST':
         response = openai.Completion.create(
             model='text-davinci-003',
@@ -27,11 +28,13 @@ def get_answer(question):
 
 @app.errorhandler(405)
 def page_not_found(e):
+    """Error handler for not allowed methods"""
     return {"success": False,
             "message": str(e)}
 
 
 def generate_prompt(question):
+    """Helper for Open Ai for answering on questions"""
     return f"""
             question: How are you?
             answer: I'm good
